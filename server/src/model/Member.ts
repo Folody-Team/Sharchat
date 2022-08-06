@@ -1,7 +1,5 @@
-import {getModelForClass, modelOptions, prop, Ref} from '@typegoose/typegoose'
+import {getModelForClass, modelOptions, prop} from '@typegoose/typegoose'
 import permissions from '../configuration/permissions'
-import { Guild } from './Guild'
-import { User } from './User'
 
 @modelOptions({
 	schemaOptions: {
@@ -16,12 +14,6 @@ export class Member {
 
 	@prop({required: true, default: Date.now()})
 	public updatedAt: Date
-
-	@prop({ required: true, default: [] })
-	public guild: Ref<Guild>
-
-    @prop({ required: true })
-    public user: Ref<User>
 
 	@prop({ requied: true })
 	public userId: string
