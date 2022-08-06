@@ -1,9 +1,10 @@
 import jsonwebtoken from 'jsonwebtoken'
 import {SessionModel} from '../model/Session'
+import path from 'path'
+import dotenv from 'dotenv'
 
 const jwtSecret = process.env.JWT_SECRET
 
-import dotenv from 'dotenv'
 dotenv.config({
 	path: path.join(__dirname, '..', '..', '.env')
 })
