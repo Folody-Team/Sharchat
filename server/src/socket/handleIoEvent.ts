@@ -43,6 +43,9 @@ export class HandleEvent {
 			if (!userId) {
 				return next(new Error('Authentication error'))
 			}
+			if (userId instanceof Error) {
+				return next(userId)
+			}
 			socket.data.UserId = userId
 		})
 	}

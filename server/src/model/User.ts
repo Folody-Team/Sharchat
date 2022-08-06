@@ -1,4 +1,5 @@
-import {getModelForClass, modelOptions, prop} from '@typegoose/typegoose'
+import {getModelForClass, modelOptions, prop, Ref} from '@typegoose/typegoose'
+import { Guild } from './Guild'
 
 @modelOptions({
 	schemaOptions: {
@@ -22,6 +23,10 @@ export class User {
 
 	@prop({required: true, default: Date.now()})
 	public updatedAt: Date
+
+	@prop({ required: true, default: [] })
+	public guilds: Ref<Guild>[]
+
 }
 
 export const UserModel = getModelForClass(User)
