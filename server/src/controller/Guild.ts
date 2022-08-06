@@ -60,14 +60,14 @@ export const DeleteGuild = async (req: Request, res: Response) => {
 			})
 			return
 		}
-		const isOwner = await MemberUtil.CheckPermissions(
+		const result = await MemberUtil.CheckPermissions(
 			res.locals.userId,
 			guild._id,
 			{
 				isOwner: true
 			}
 		)
-		if(!isOwner) {
+		if(!result.isOwner) {
 			res.status(403).send({
 				message: 'Requested user is not the guild owner'
 			})
