@@ -13,6 +13,15 @@ export const RegisterUser = async (req: Request, res: Response) => {
 	}
 
 	try {
+		const alreadyUser =
+			(await UserModel.findOne({email: email})) ||
+			(await UserModel.findOne({username: username}))
+		if (alreadyUser) {
+			return res.status(400).json({
+				message: 'Username or email is already taken',
+			})
+		}
+
 		const hashPassword = await bcrypt.hash(password, 10)
 		const user = new UserModel({
 			email,
