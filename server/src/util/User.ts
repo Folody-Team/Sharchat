@@ -3,11 +3,11 @@ import {SessionModel} from '../model/Session'
 import path from 'path'
 import dotenv from 'dotenv'
 
-const jwtSecret = process.env.JWT_SECRET
-
 dotenv.config({
 	path: path.join(__dirname, '..', '..', '.env')
 })
+
+const jwtSecret = process.env.JWT_SECRET
 
 interface JwtPayload {
 	sessionId: string
