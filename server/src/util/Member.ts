@@ -42,9 +42,7 @@ export const MemberUtil = {
 
 		const member = new MemberModel({
 			userId: user._id,
-			guild: guild,
 			guildId: guild._id,
-			user: user,
 			permissions: [],
 			...options,
 		})
