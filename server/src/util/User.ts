@@ -1,13 +1,12 @@
 import jsonwebtoken from 'jsonwebtoken'
 import {SessionModel} from '../model/Session'
-import path from "path";
+
+const jwtSecret = process.env.JWT_SECRET
 
 import dotenv from 'dotenv'
 dotenv.config({
 	path: path.join(__dirname, '..', '..', '.env')
 })
-
-const jwtSecret = process.env.JWT_SECRET
 
 interface JwtPayload {
 	sessionId: string
@@ -31,10 +30,13 @@ export const UserUtil = {
         if (!jwtSecret) {
             throw new Error('JWT_SECRET is not defined')
         }
-        const payload = jsonwebtoken.verify(token, jwtSecret) as JwtPayload
+		const payload = jsonwebtoken.verify(token, jwtSecret) as JwtPayload
+		if (!payload) {
+			return new Error('Invalid token')
+		}
         const session = await SessionModel.findById(payload.sessionId)
         if (!session) {
-            return false
+            return new Error('Invalid token')
         }
         return session.UserId
     }
