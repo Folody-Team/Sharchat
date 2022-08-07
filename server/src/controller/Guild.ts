@@ -2,6 +2,7 @@ import {Request} from 'express'
 import { MemberUtil } from '../util/Member'
 import {GuildModel} from '../model/Guild'
 import {Response} from '../typings/ResponseInput'
+import { MemberModel } from '../model/Member'
 
 export const CreateGuild = async (req: Request, res: Response) => {
 	const {name, description} = req.body
@@ -27,7 +28,7 @@ export const CreateGuild = async (req: Request, res: Response) => {
 			}
 		)
 
-		guild.members.push(member)
+		guild.members.push(member.userId)
 
 		await guild.save()
 
@@ -68,19 +69,22 @@ export const DeleteGuild = async (req: Request, res: Response) => {
 			}
 		)
 		if(!result.isOwner) {
-			res.status(403).send({
+			res.status(403).json({
 				message: 'Requested user is not the guild owner'
 			})
 			return;
 		}
 
 		try {
-			await MemberUtil.DeleteMember(guild._id, res.locals.userId)
+			const members = await MemberModel.find({
+				guildId: guild._id
+			})
+			members.map((d) => d.delete())
 		} catch(err) {}
 
 		await guild.delete()
 
-		res.status(200).send({
+		res.status(200).json({
 			message: 'Guild deleted',
 		})
 	} catch (error) {
@@ -120,7 +124,7 @@ export const EditGuild = async (req: Request, res: Response) => {
 			!result.permissions.includes('admin') &&
 			!result.permissions.includes('server_manager')
 		) {
-			res.status(403).send({
+			res.status(403).json({
 				message: "Requested member doesn't have permission to edit",
 			})
 			return
@@ -137,7 +141,7 @@ export const EditGuild = async (req: Request, res: Response) => {
 			await guild.save()
 		}
 
-		res.status(200).send({
+		res.status(200).json({
 			message: 'Guild edited',
 			guild,
 		})

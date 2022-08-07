@@ -30,6 +30,8 @@ export const MemberUtil = {
 			throw new Error('Guild ID/User ID is not provided')
 		}
 
+		if(!options.isOwner) options.isOwner = false
+
 		const user = await UserModel.findById(userId)
 		if (!user) {
 			throw new Error('User not found')

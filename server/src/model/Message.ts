@@ -1,6 +1,4 @@
-import {getModelForClass, modelOptions, prop, Ref} from '@typegoose/typegoose'
-import { Channel } from './Channel'
-import { User } from './User'
+import {getModelForClass, modelOptions, prop} from '@typegoose/typegoose'
 
 @modelOptions({
 	schemaOptions: {
@@ -16,11 +14,11 @@ export class Message {
 	@prop({required: true, default: Date.now()})
 	public updatedAt: Date
 
-	@prop({required: true,ref: () => User})
-	public User: Ref<User>
+	@prop({required: true})
+	public User: string
 
-	@prop({required: true, ref: () => Channel})
-	public Channel: Ref<Channel>
+	@prop({required: true})
+	public Channel: string
 
 	@prop({required: false})
 	public threadId: string

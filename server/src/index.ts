@@ -9,6 +9,7 @@ import {
 } from './socket'
 import UserRouter from './router/User'
 import GuildRouter from './router/Guild'
+import MemberRouter from './router/Member'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import path from 'path'
@@ -39,6 +40,7 @@ mongoose.connect(process.env.DB_URL, {})
 
 app.use('/user', UserRouter)
 app.use('/guild', AuthMiddleware, GuildRouter)
+app.use('/member', AuthMiddleware, MemberRouter)
 
 HttpServer.listen(3000, () => {
 	console.log('Server listening on port 3000')

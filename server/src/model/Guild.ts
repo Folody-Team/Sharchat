@@ -1,6 +1,4 @@
-import {getModelForClass, modelOptions, prop, Ref} from '@typegoose/typegoose'
-import { Channel } from './Channel'
-import { Member } from './Member'
+import {getModelForClass, modelOptions, prop} from '@typegoose/typegoose'
 import {User} from './User'
 
 @modelOptions({
@@ -24,13 +22,13 @@ export class Guild {
 	public description: string
 
 	@prop({required: true, ref: () => User})
-	public owner: Ref<User>
+	public owner: string
 
     @prop({ required: true, default: [] })
-    public members: Ref<Member>[]
+    public members: string[]
 
     @prop({ required: true, default: [] })
-    public channels: Ref<Channel>[]
+    public channels: string[]
 }
 
 export const GuildModel = getModelForClass(Guild)
