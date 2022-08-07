@@ -1,5 +1,4 @@
-import {getModelForClass, modelOptions, prop, Ref} from '@typegoose/typegoose'
-import { Guild } from './Guild'
+import {getModelForClass, modelOptions, prop} from '@typegoose/typegoose'
 
 @modelOptions({
 	schemaOptions: {
@@ -25,7 +24,7 @@ export class User {
 	public updatedAt: Date
 
 	@prop({ required: true, default: [] })
-	public guilds: Ref<Guild>[]
+	public guilds: string[]
 
 }
 
