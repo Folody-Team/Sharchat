@@ -41,7 +41,6 @@ export const MemberUtil = {
 		if (!guild) {
 			throw new Error('Guild not found')
 		}
-
 		const member = new MemberModel({
 			userId: user._id,
 			guildId: guild._id,
@@ -103,7 +102,7 @@ export const MemberUtil = {
 			throw new Error('Member not found')
 		}
 
-		let result: {
+		const result: {
 			permissions: Array<keyof typeof permissions>
 			some?: boolean
 			every?: boolean

@@ -26,7 +26,7 @@ export interface ControllerType<auth = false, TResponse = unknown> {
 					type?: any
 			  }
 	}
-	name: string
+	ControllerName: string
 	RequestMethod?: 'get' | 'post' | 'put' | 'delete' | 'patch'
 }
 
@@ -35,7 +35,7 @@ export class Controller {
 	constructor(public controller: ControllerType[]) {
 		this.controllers = new Map<string, ControllerType>()
 		for (const c of controller) {
-			this.controllers.set(c.name, c)
+			this.controllers.set(c.ControllerName, c)
 		}
 	}
 	SetupRouter(router: Router) {

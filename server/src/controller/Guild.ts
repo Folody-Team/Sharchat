@@ -38,7 +38,7 @@ export const CreateGuild: ControllerType<true> = async (req, res) => {
 		})
 	}
 }
-CreateGuild.name = 'create'
+CreateGuild.ControllerName = 'create'
 CreateGuild.RequestMethod = 'post'
 CreateGuild.RequestBody = {
 	name: String,
@@ -81,7 +81,9 @@ export const DeleteGuild: ControllerType<true> = async (req, res) => {
 				guildId: guild._id,
 			})
 			members.map((d) => d.delete())
-		} catch (err) {}
+		} catch (err) {
+			console.log(err)
+		}
 
 		await guild.delete()
 
@@ -95,7 +97,7 @@ export const DeleteGuild: ControllerType<true> = async (req, res) => {
 		})
 	}
 }
-DeleteGuild.name = 'delete'
+DeleteGuild.ControllerName = 'delete'
 DeleteGuild.RequestMethod = 'delete'
 DeleteGuild.RequestBody = {
 	id: String,
@@ -158,7 +160,7 @@ export const EditGuild: ControllerType<true> = async (req, res) => {
 		})
 	}
 }
-EditGuild.name = 'edit'
+EditGuild.ControllerName = 'edit'
 EditGuild.RequestMethod = 'patch'
 EditGuild.RequestBody = {
 	id: String,
