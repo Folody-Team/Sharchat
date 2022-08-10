@@ -95,7 +95,8 @@ export const MemberUtil = {
 		}
 
 		const member = await MemberModel.findOne({
-			userId: user._id
+			userId: user._id,
+			guildId: guild._id
 		})
 
 		if (!member) {

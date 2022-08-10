@@ -3,8 +3,9 @@ import {MemberUtil} from '../util/Member'
 import {MemberModel} from '../model/Member'
 import {GuildModel} from '../model/Guild'
 import {Response} from '../typings/ResponseInput'
+import {Controller, ControllerType} from '../typings/ControllerType'
 
-export const JoinGuild = async (req: Request, res: Response<true>) => {
+export const JoinGuild: ControllerType<true> = async (req: Request, res: Response<true>) => {
 	const id = req.body.id
 	if (!id) {
 		res.status(400).json({
@@ -52,7 +53,13 @@ export const JoinGuild = async (req: Request, res: Response<true>) => {
 	}
 }
 
-export const LeaveGuild = async (req: Request, res: Response<true>) => {
+JoinGuild.ControllerName = "join"
+JoinGuild.RequestMethod = "post"
+JoinGuild.RequestBody = {
+	id: "string"
+}
+
+export const LeaveGuild: ControllerType<true> = async (req: Request, res: Response<true>) => {
 	const id = req.body.id
 	if (!id) {
 		res.status(400).json({
@@ -106,7 +113,13 @@ export const LeaveGuild = async (req: Request, res: Response<true>) => {
 	}
 }
 
-export const RemoveMember = async (req: Request, res: Response<true>) => {
+LeaveGuild.ControllerName = "leave",
+LeaveGuild.RequestMethod = "delete",
+LeaveGuild.RequestBody = {
+	id: "string"
+}
+
+export const RemoveMember: ControllerType<true> = async (req: Request, res: Response<true>) => {
 	const userId = req.body.userId
 	const guildId = req.body.guildId
 	if (!userId || !guildId) {
@@ -188,3 +201,16 @@ export const RemoveMember = async (req: Request, res: Response<true>) => {
 		})
 	}
 }
+
+RemoveMember.ControllerName = "remove",
+RemoveMember.RequestMethod = "delete",
+RemoveMember.RequestBody = {
+	userId: "string",
+	guildId: "string"
+}
+
+export const MemberController = new Controller([
+	JoinGuild,
+	LeaveGuild,
+	RemoveMember,
+])

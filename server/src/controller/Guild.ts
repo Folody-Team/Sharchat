@@ -41,7 +41,7 @@ export const CreateGuild: ControllerType<true> = async (req, res) => {
 CreateGuild.ControllerName = 'create'
 CreateGuild.RequestMethod = 'post'
 CreateGuild.RequestBody = {
-	name: String,
+	name: "string",
 	description: String,
 }
 
@@ -100,7 +100,7 @@ export const DeleteGuild: ControllerType<true> = async (req, res) => {
 DeleteGuild.ControllerName = 'delete'
 DeleteGuild.RequestMethod = 'delete'
 DeleteGuild.RequestBody = {
-	id: String,
+	id: "string",
 }
 
 export const EditGuild: ControllerType<true> = async (req, res) => {
@@ -163,13 +163,13 @@ export const EditGuild: ControllerType<true> = async (req, res) => {
 EditGuild.ControllerName = 'edit'
 EditGuild.RequestMethod = 'patch'
 EditGuild.RequestBody = {
-	id: String,
+	id: "string",
 	name: {
-		type: String,
+		type: "string",
 		optional: true,
 	},
 	description: {
-		type: String,
+		type: "string",
 		optional: true,
 	},
 }

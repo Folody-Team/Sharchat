@@ -49,8 +49,9 @@ export class Controller {
 		}
 	}
 	checkRequestBody(req: Request, res: Response<false>, next: NextFunction) {
+		req.url = req.protocol + '://' + req.get('host') + req.originalUrl;
 		const controller = this.controllers.get(
-			new URL(req.url).pathname.split('/')[1]
+			new URL(req.url).pathname.split('/')[2]
 		)
 		if (!controller) {
 			res.status(400).json({
@@ -70,8 +71,9 @@ export class Controller {
 
 					return
 				}
+
 				if (
-					!(req.body[key] instanceof controller.RequestBody[key]) &&
+					!checkType(controller.RequestBody[key], req.body[key]) &&
 					!controller.RequestBody[key].optional
 				) {
 					res.status(400).json({
@@ -86,8 +88,9 @@ export class Controller {
 		next()
 	}
 	checkRequestQuery(req: Request, res: Response<false>, next: NextFunction) {
+		req.url = req.protocol + '://' + req.get('host') + req.originalUrl;
 		const controller = this.controllers.get(
-			new URL(req.url).pathname.split('/')[1]
+			new URL(req.url).pathname.split('/')[2]
 		)
 		if (!controller) {
 			res.status(400).json({
@@ -104,7 +107,7 @@ export class Controller {
 
 					return
 				}
-				if (!(req.query[key] instanceof controller.RequestQuery[key])) {
+				if (!checkType(controller.RequestQuery[key], req.query[key])) {
 					res.status(400).json({
 						message: 'Missing required fields',
 					})
@@ -114,4 +117,14 @@ export class Controller {
 		}
 		next()
 	}
+}
+
+function checkType(type:
+	"array"
+	| "number"
+	| "string"
+	| "object",
+value: any) {
+	if(type == "array") return Array.isArray(value)
+	return typeof value == type
 }
