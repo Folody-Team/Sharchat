@@ -1,5 +1,5 @@
-import {Router} from "express"
-import {GuildController} from "../controller/Guild"
+import {Router} from 'express'
+import {GuildController} from '../controller/Guild'
 
 const GuildRouter = Router()
 

@@ -30,7 +30,7 @@ export const MemberUtil = {
 			throw new Error('Guild ID/User ID is not provided')
 		}
 
-		if(!options.isOwner) options.isOwner = false
+		if (!options.isOwner) options.isOwner = false
 
 		const user = await UserModel.findById(userId)
 		if (!user) {
@@ -52,7 +52,7 @@ export const MemberUtil = {
 	},
 	DeleteMember: async (
 		guildId: string | undefined,
-		userId: string | undefined,
+		userId: string | undefined
 	) => {
 		if (!userId) {
 			throw new Error('Guild ID/User ID is not provided')
@@ -65,9 +65,9 @@ export const MemberUtil = {
 
 		const member = await MemberModel.findOne({
 			userId: user._id,
-			guildId: guildId
+			guildId: guildId,
 		})
-		if(!member) {
+		if (!member) {
 			throw new Error('Member not found')
 		}
 		await member.delete()
@@ -95,7 +95,7 @@ export const MemberUtil = {
 		}
 
 		const member = await MemberModel.findOne({
-			userId: user._id
+			userId: user._id,
 		})
 
 		if (!member) {

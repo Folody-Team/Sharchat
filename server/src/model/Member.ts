@@ -15,18 +15,17 @@ export class Member {
 	@prop({required: true, default: Date.now()})
 	public updatedAt: Date
 
-	@prop({ requied: true })
+	@prop({requied: true})
 	public userId: string
 
-	@prop({ requied: true })
+	@prop({requied: true})
 	public guildId: string
 
-    @prop({ required: true, default: [] })
-    public permissions: Array<keyof typeof permissions>
+	@prop({required: true, default: []})
+	public permissions: Array<keyof typeof permissions>
 
-    @prop({ default: false })
-    public isOwner: boolean
-
+	@prop({default: false})
+	public isOwner: boolean
 }
 
 export const MemberModel = getModelForClass(Member)

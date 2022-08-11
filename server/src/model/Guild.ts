@@ -24,11 +24,11 @@ export class Guild {
 	@prop({required: true, ref: () => User})
 	public owner: string
 
-    @prop({ required: true, default: [] })
-    public members: string[]
+	@prop({required: true, default: []})
+	public members: string[]
 
-    @prop({ required: true, default: [] })
-    public channels: string[]
+	@prop({required: true, default: []})
+	public channels: string[]
 }
 
 export const GuildModel = getModelForClass(Guild)

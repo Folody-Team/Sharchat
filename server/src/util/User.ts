@@ -4,7 +4,7 @@ import path from 'path'
 import dotenv from 'dotenv'
 
 dotenv.config({
-	path: path.join(__dirname, '..', '..', '.env')
+	path: path.join(__dirname, '..', '..', '.env'),
 })
 
 const jwtSecret = process.env.JWT_SECRET
@@ -26,20 +26,19 @@ export const UserUtil = {
 			sessionId: Session._id,
 		}
 		return jsonwebtoken.sign(payload, jwtSecret, {expiresIn: '1d'})
-    },
-    VerifyToken: async (token: string) => {
-        if (!jwtSecret) {
-            throw new Error('JWT_SECRET is not defined')
-        }
+	},
+	VerifyToken: async (token: string) => {
+		if (!jwtSecret) {
+			throw new Error('JWT_SECRET is not defined')
+		}
 		const payload = jsonwebtoken.verify(token, jwtSecret) as JwtPayload
 		if (!payload) {
 			return new Error('Invalid token')
 		}
-        const session = await SessionModel.findById(payload.sessionId)
-        if (!session) {
-            return new Error('Invalid token')
-        }
-        return session.UserId
-    }
-
+		const session = await SessionModel.findById(payload.sessionId)
+		if (!session) {
+			return new Error('Invalid token')
+		}
+		return session.UserId
+	},
 }
