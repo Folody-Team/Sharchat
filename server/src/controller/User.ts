@@ -3,8 +3,12 @@ import {UserModel} from '../model/User'
 
 import bcrypt from 'bcrypt'
 import {UserUtil} from '../util/User'
+import {ControllerType, Controller} from '../typings/ControllerType'
 
-export const RegisterUser = async (req: Request, res: Response) => {
+export const RegisterUser: ControllerType = async (
+	req: Request,
+	res: Response
+) => {
 	const {email, password, username} = req.body
 	if (!email || !password || !username) {
 		return res.status(400).json({
@@ -39,8 +43,18 @@ export const RegisterUser = async (req: Request, res: Response) => {
 		})
 	}
 }
+RegisterUser.ControllerName = 'register'
+RegisterUser.RequestMethod = 'post'
+RegisterUser.RequestBody = {
+	email: "string",
+	username: "string",
+	password: "string",
+}
 
-export const LoginUser = async (req: Request, res: Response) => {
+export const LoginUser: ControllerType<false> = async (
+	req: Request,
+	res: Response
+) => {
 	const {emailOrUsername, password} = req.body
 	if (!emailOrUsername || !password) {
 		return res.status(400).json({
@@ -73,3 +87,12 @@ export const LoginUser = async (req: Request, res: Response) => {
 		})
 	}
 }
+
+LoginUser.ControllerName = 'login'
+LoginUser.RequestMethod = 'post'
+LoginUser.RequestBody = {
+	emailOrUsername: "string",
+	password: "string",
+}
+
+export const UserController = new Controller([RegisterUser, LoginUser])

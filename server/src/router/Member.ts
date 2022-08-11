@@ -1,10 +1,8 @@
-import {Router} from 'express'
-import {JoinGuild, LeaveGuild, RemoveMember} from '../controller/Member'
+import {Router} from "express"
+import {MemberController} from "../controller/Member"
 
 const MemberRouter = Router()
 
-MemberRouter.post('/join', JoinGuild)
-MemberRouter.delete('/leave', LeaveGuild)
-MemberRouter.delete('/remove', RemoveMember)
+MemberController.SetupRouter(MemberRouter)
 
 export default MemberRouter

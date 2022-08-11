@@ -3,8 +3,9 @@ import {MemberUtil} from '../util/Member'
 import {MemberModel} from '../model/Member'
 import {GuildModel} from '../model/Guild'
 import {Response} from '../typings/ResponseInput'
+import {Controller, ControllerType} from '../typings/ControllerType'
 
-export const JoinGuild = async (req: Request, res: Response) => {
+export const JoinGuild: ControllerType<true> = async (req: Request, res: Response<true>) => {
 	const id = req.body.id
 	if (!id) {
 		res.status(400).json({
@@ -52,7 +53,13 @@ export const JoinGuild = async (req: Request, res: Response) => {
 	}
 }
 
-export const LeaveGuild = async (req: Request, res: Response) => {
+JoinGuild.ControllerName = "join"
+JoinGuild.RequestMethod = "post"
+JoinGuild.RequestBody = {
+	id: "string"
+}
+
+export const LeaveGuild: ControllerType<true> = async (req: Request, res: Response<true>) => {
 	const id = req.body.id
 	if (!id) {
 		res.status(400).json({
@@ -106,9 +113,15 @@ export const LeaveGuild = async (req: Request, res: Response) => {
 	}
 }
 
-export const RemoveMember = async (req: Request, res: Response) => {
-	const userId = req.body.userId;
-	const guildId = req.body.guildId;
+LeaveGuild.ControllerName = "leave",
+LeaveGuild.RequestMethod = "delete",
+LeaveGuild.RequestBody = {
+	id: "string"
+}
+
+export const RemoveMember: ControllerType<true> = async (req: Request, res: Response<true>) => {
+	const userId = req.body.userId
+	const guildId = req.body.guildId
 	if (!userId || !guildId) {
 		res.status(400).json({
 			message: 'Missing required fields',
@@ -125,7 +138,7 @@ export const RemoveMember = async (req: Request, res: Response) => {
 			return
 		}
 
-		let requested = await MemberModel.findOne({
+		const requested = await MemberModel.findOne({
 			userId: res.locals.userId,
 			guildId: guild._id,
 		})
@@ -137,11 +150,15 @@ export const RemoveMember = async (req: Request, res: Response) => {
 			return
 		}
 
-		if(!requested.permissions.find(v => v == "admin" || v == "moderator") && (!requested.isOwner && requested.userId !== guild.owner)) {
+		if (
+			!requested.permissions.find((v) => v == 'admin' || v == 'moderator') &&
+			!requested.isOwner &&
+			requested.userId !== guild.owner
+		) {
 			res.status(403).send({
-				message: "Missing permissions"
+				message: 'Missing permissions',
 			})
-			return;
+			return
 		}
 
 		let member = await MemberModel.findOne({
@@ -156,11 +173,16 @@ export const RemoveMember = async (req: Request, res: Response) => {
 			return
 		}
 
-		if(member.permissions.find(v => v == "admin" || v == "moderator") || (member.isOwner || member.userId == guild.owner)) {
+		if (
+			member.permissions.find((v) => v == 'admin' || v == 'moderator') ||
+			member.isOwner ||
+			member.userId == guild.owner
+		) {
 			res.status(403).send({
-				message: "You can't remove this member from the guild. They are Admin, Moderator or Server Owner"
+				message:
+					"You can't remove this member from the guild. They are Admin, Moderator or Server Owner",
 			})
-			return;
+			return
 		}
 
 		member = await MemberUtil.DeleteMember(guild._id, userId)
@@ -179,3 +201,16 @@ export const RemoveMember = async (req: Request, res: Response) => {
 		})
 	}
 }
+
+RemoveMember.ControllerName = "remove",
+RemoveMember.RequestMethod = "delete",
+RemoveMember.RequestBody = {
+	userId: "string",
+	guildId: "string"
+}
+
+export const MemberController = new Controller([
+	JoinGuild,
+	LeaveGuild,
+	RemoveMember,
+])

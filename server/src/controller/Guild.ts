@@ -1,10 +1,9 @@
-import {Request} from 'express'
-import { MemberUtil } from '../util/Member'
 import {GuildModel} from '../model/Guild'
-import {Response} from '../typings/ResponseInput'
-import { MemberModel } from '../model/Member'
+import {MemberModel} from '../model/Member'
+import {Controller, ControllerType} from '../typings/ControllerType'
+import {MemberUtil} from '../util/Member'
 
-export const CreateGuild = async (req: Request, res: Response) => {
+export const CreateGuild: ControllerType<true> = async (req, res) => {
 	const {name, description} = req.body
 	if (!name || !description) {
 		res.status(400).json({
@@ -14,19 +13,15 @@ export const CreateGuild = async (req: Request, res: Response) => {
 	}
 
 	try {
-		const guild = await (new GuildModel({
+		const guild = await new GuildModel({
 			name,
 			description,
 			owner: res.locals.userId,
-		})).save()
-		
-		const member = await MemberUtil.CreateMember(
-			guild._id,
-			res.locals.userId,
-			{
-				isOwner: true
-			}
-		)
+		}).save()
+
+		const member = await MemberUtil.CreateMember(guild._id, res.locals.userId, {
+			isOwner: true,
+		})
 
 		guild.members.push(member.userId)
 
@@ -43,8 +38,14 @@ export const CreateGuild = async (req: Request, res: Response) => {
 		})
 	}
 }
+CreateGuild.ControllerName = 'create'
+CreateGuild.RequestMethod = 'post'
+CreateGuild.RequestBody = {
+	name: "string",
+	description: String,
+}
 
-export const DeleteGuild = async (req: Request, res: Response) => {
+export const DeleteGuild: ControllerType<true> = async (req, res) => {
 	const {id} = req.body
 	if (!id) {
 		res.status(400).json({
@@ -65,22 +66,24 @@ export const DeleteGuild = async (req: Request, res: Response) => {
 			res.locals.userId,
 			guild._id,
 			{
-				isOwner: true
+				isOwner: true,
 			}
 		)
-		if(!result.isOwner) {
+		if (!result.isOwner) {
 			res.status(403).json({
-				message: 'Requested user is not the guild owner'
+				message: 'Requested user is not the guild owner',
 			})
-			return;
+			return
 		}
 
 		try {
 			const members = await MemberModel.find({
-				guildId: guild._id
+				guildId: guild._id,
 			})
 			members.map((d) => d.delete())
-		} catch(err) {}
+		} catch (err) {
+			console.log(err)
+		}
 
 		await guild.delete()
 
@@ -94,8 +97,13 @@ export const DeleteGuild = async (req: Request, res: Response) => {
 		})
 	}
 }
+DeleteGuild.ControllerName = 'delete'
+DeleteGuild.RequestMethod = 'delete'
+DeleteGuild.RequestBody = {
+	id: "string",
+}
 
-export const EditGuild = async (req: Request, res: Response) => {
+export const EditGuild: ControllerType<true> = async (req, res) => {
 	const {id, name, description} = req.body
 	if (!id) {
 		res.status(400).json({
@@ -152,3 +160,22 @@ export const EditGuild = async (req: Request, res: Response) => {
 		})
 	}
 }
+EditGuild.ControllerName = 'edit'
+EditGuild.RequestMethod = 'patch'
+EditGuild.RequestBody = {
+	id: "string",
+	name: {
+		type: "string",
+		optional: true,
+	},
+	description: {
+		type: "string",
+		optional: true,
+	},
+}
+
+export const GuildController = new Controller([
+	CreateGuild,
+	DeleteGuild,
+	EditGuild,
+])
